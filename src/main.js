@@ -2,13 +2,13 @@
 
 var Task = React.createClass({
 	handleClick: function() {
-		console.log(this.props.name);
-		console.log(this.props.type);
 		this.props.handleUserSelection(this.props.name, this.props.type);
 	},
 	render: function() {
 		return (
-		 	<div name={this.props.name} type={this.props.type} onClick={this.handleClick}><p>{this.props.name}</p></div>
+		 	<tr className="taskData" name={this.props.name} type={this.props.type} onClick={this.handleClick}>
+		 		<td>{this.props.name}</td>
+	 		</tr>
 		);
 	}
 });
@@ -21,9 +21,12 @@ var List = React.createClass({
 		}.bind(this));
 
 		return (
-			<div>
-				{taskList}
-			</div>
+			<table className="taskList">
+				<caption>{this.props.caption}</caption>
+				<tbody>
+					{taskList}
+				</tbody>
+			</table>
 		);
 	}
 });
@@ -46,6 +49,7 @@ var Todo = React.createClass({
 		};
 	},
 	handleUserSelection: function(taskName, taskType) {
+		// TODO: this is hacky but I can't think of a better solution
 		var newTaskType;
 		if ("complete" == taskType) {
 			newTaskType = "incomplete";
@@ -69,8 +73,6 @@ var Todo = React.createClass({
 			}
 		});
 
-		console.log(TASKS);
-
 		this.setState({
 			incompleteTasks: incompleteTasks,
 			completeTasks: completeTasks
@@ -81,14 +83,8 @@ var Todo = React.createClass({
 		return (
 			<div className="todo">
 				<h1>Todo List</h1>
-				<div className="incompleteTasks">
-					<h2>Incomplete Tasks</h2>
-					<List tasks={this.state.incompleteTasks} onUserSelection={this.handleUserSelection} />
-				</div>
-				<div className="completeTasks">
-					<h2>Complete Tasks</h2>
-					<List tasks={this.state.completeTasks} onUserSelection={this.handleUserSelection} />
-				</div>
+				<List tasks={this.state.incompleteTasks} caption="Incomplete" onUserSelection={this.handleUserSelection} />
+				<List tasks={this.state.completeTasks} caption="Complete" onUserSelection={this.handleUserSelection} />
 			</div>
 		);
 	}
