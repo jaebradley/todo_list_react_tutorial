@@ -1,3 +1,6 @@
+// idea from this tutorial: https://www.codementor.io/reactjs/tutorial/react-js-flux-architecture-tutorial
+// example (not mine): http://chrisharrington.github.io/demos/react-todo/
+
 "use strict";
 
 var Task = React.createClass({
