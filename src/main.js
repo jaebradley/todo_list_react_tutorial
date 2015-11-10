@@ -31,6 +31,23 @@ var List = React.createClass({
 	}
 });
 
+var TaskCreator = React.createClass({
+	submitNewTask: function(e) {
+		e.preventDefault();
+		this.props.handleUserNewTask(this.refs.taskCreator.value);
+		this.refs.taskCreator.value = "";
+		return;
+	},
+	render: function() {
+		return (
+			<form className="taskCreator" onSubmit={this.submitNewTask}>
+				<input type="text" placeholder="New Task Name..." ref="taskCreator" />
+				<input type="submit" value="Add" />
+			</form>
+		);
+	}
+});
+
 var Todo = React.createClass({
 	getInitialState: function() {
 		var incompleteTasks = [];
@@ -78,6 +95,27 @@ var Todo = React.createClass({
 			completeTasks: completeTasks
 		});
 	},
+	handleUserNewTask: function(taskName) {
+		this.props.allTasks.push({
+			name: taskName,
+			type: 'incomplete'
+		});
+
+		var incompleteTasks = [];
+		var completeTasks = [];
+		this.props.allTasks.forEach(function(task) {
+			if (task.type == "complete") {
+				completeTasks.push(task);
+			} else {
+				incompleteTasks.push(task);
+			}
+		});
+
+		this.setState({
+			incompleteTasks: incompleteTasks,
+			completeTasks: completeTasks
+		});
+	},
 	render: function() {
 
 		return (
@@ -85,6 +123,7 @@ var Todo = React.createClass({
 				<h1>Todo List</h1>
 				<List tasks={this.state.incompleteTasks} caption="Incomplete" onUserSelection={this.handleUserSelection} />
 				<List tasks={this.state.completeTasks} caption="Complete" onUserSelection={this.handleUserSelection} />
+				<TaskCreator handleUserNewTask={this.handleUserNewTask} />
 			</div>
 		);
 	}
@@ -98,6 +137,6 @@ var TASKS = [
 ];
 
 ReactDOM.render(
-  <Todo allTasks={TASKS} />,
+  <Todo allTasks={TASKS} url="/api/newTask" />,
   document.getElementById('content')
 );
